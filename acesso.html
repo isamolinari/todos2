@@ -7,43 +7,51 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #0f1724;
+      background-color: #0f1724;
       color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       margin: 0;
-      padding: 20px;
     }
-    h1 {
+
+    .container {
+      background-color: #1e293b;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
       text-align: center;
-      margin-bottom: 30px;
     }
-    ul {
-      list-style: none;
-      padding: 0;
-      max-width: 600px;
-      margin: auto;
+
+    h1 {
+      color: #06b6d4;
+      margin-bottom: 20px;
     }
-    li {
-      margin: 12px 0;
-    }
+
     a {
       display: block;
-      padding: 12px;
-      background: #1e293b;
-      border-radius: 8px;
-      color: #06b6d4;
       text-decoration: none;
-      font-weight: bold;
-      transition: background 0.2s;
+      color: #fff;
+      background-color: #2563eb;
+      padding: 12px 20px;
+      margin: 10px 0;
+      border-radius: 8px;
+      transition: 0.3s;
     }
+
     a:hover {
-      background: #334155;
+      background-color: #3b82f6;
     }
   </style>
 </head>
 <body>
-  <h1>Meus Links</h1>
-  <ul>
-    <li><a href="https://isamolinari.github.io/todos2/acesso.html" target="_blank">📌 Acesso - Todos os Exercícios</a></li>
-  </ul>
+  <div class="container">
+    <h1>Acesso aos Links</h1>
+    <a href="https://isamolinari.github.io/todos2/acesso.html" target="_blank">Link 1</a>
+    <a href="https://isamolinari.github.io/todos2/exemplo2.html" target="_blank">Link 2</a>
+    <a href="https://isamolinari.github.io/todos2/exemplo3.html" target="_blank">Link 3</a>
+    <!-- Adicione mais links aqui -->
+  </div>
 </body>
 </html>
