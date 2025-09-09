@@ -1,110 +1,39 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Página de Acesso — Atalho</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acesso Rápido</title>
   <style>
-    :root{--bg:#0f1724;--card:#0b1220;--accent:#d63384;--muted:#94a3b8;--glass:rgba(255,255,255,0.03)}
-    *{box-sizing:border-box}
-    body{
-      margin:0;min-height:100vh;background:linear-gradient(180deg,#071024 0%,var(--bg) 100%);font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;color:#e6eef6;display:flex;align-items:center;justify-content:center;padding:32px;
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f1724;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-    .card{
-      width:100%;max-width:920px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);backdrop-filter:blur(6px);border-radius:14px;padding:28px;box-shadow:0 8px 30px rgba(2,6,23,0.6);
+    .btn {
+      background: #d63384;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
     }
-    header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
-    .logo{width:56px;height:56px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),#ff77b6);font-weight:700;color:white}
-    h1{font-size:20px;margin:0}
-    p.lead{margin:6px 0 18px;color:var(--muted)}
-    .buttons{display:flex;flex-wrap:wrap;gap:12px}
-    .btn{appearance:none;border:0;padding:12px 18px;border-radius:10px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:10px}
-    .btn.primary{background:linear-gradient(90deg,var(--accent),#ff77b6);color:#0b1220}
-    .btn.ghost{background:var(--glass);color:#e9f2ff;border:1px solid rgba(255,255,255,0.03)}
-    .btn.small{padding:8px 12px;font-size:14px}
-    .meta{margin-top:18px;color:var(--muted);font-size:14px}
-    .link-box{margin-top:16px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;gap:12px;align-items:center}
-    input.link{flex:1;background:transparent;border:0;color:inherit;font-size:14px;outline:none}
-    footer{margin-top:22px;color:var(--muted);font-size:13px}
-    @media (max-width:520px){.card{padding:18px}.buttons{flex-direction:column}.logo{width:44px;height:44px}}
+    .btn:hover {
+      background: #f472b6;
+    }
   </style>
 </head>
 <body>
-  <main class="card" role="main">
-    <header>
-      <div class="logo">AT</div>
-      <div>
-        <h1>Página de Acesso</h1>
-        <p class="lead">Use os botões abaixo para abrir o link de acesso ou copiar o endereço.</p>
-      </div>
-    </header>
-
-    <div class="link-box" aria-label="Link de acesso">
-      <input class="link" id="accessLink" type="text" readonly value="https://isamolinari.github.io/todos2/acesso.html" />
-      <button class="btn small ghost" id="copyBtn" title="Copiar link">Copiar</button>
-    </div>
-
-    <div class="buttons" style="margin-top:18px">
-      <a class="btn primary" id="openBtn" href="https://isamolinari.github.io/todos2/acesso.html" target="_blank" rel="noopener noreferrer">Abrir página</a>
-      <button class="btn ghost" id="openSame">Abrir na mesma aba</button>
-      <button class="btn ghost" id="downloadBtn">Abrir e baixar (se disponível)</button>
-      <button class="btn ghost" id="previewBtn">Visualizar em iframe</button>
-    </div>
-
-    <div class="meta" id="status">Status: pronto</div>
-
-    <div id="previewArea" style="margin-top:16px;display:none">
-      <iframe id="previewFrame" src="" style="width:100%;height:420px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)"></iframe>
-    </div>
-
-    <footer>
-      Dica: se quiser adicionar outros links, copie e cole novos botões no HTML e altere o atributo <code>href</code>.
-    </footer>
-  </main>
-
-  <script>
-    const linkInput = document.getElementById('accessLink');
-    const copyBtn = document.getElementById('copyBtn');
-    const openSame = document.getElementById('openSame');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const previewBtn = document.getElementById('previewBtn');
-    const status = document.getElementById('status');
-    const previewArea = document.getElementById('previewArea');
-    const previewFrame = document.getElementById('previewFrame');
-
-    copyBtn.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(linkInput.value);
-        status.textContent = 'Status: link copiado para a área de transferência.';
-      } catch (e) {
-        status.textContent = 'Status: não foi possível copiar automaticamente — selecione o link e copie manualmente.';
-      }
-    });
-
-    openSame.addEventListener('click', () => {
-      status.textContent = 'Status: abrindo na mesma aba...';
-      window.location.href = linkInput.value;
-    });
-
-    downloadBtn.addEventListener('click', () => {
-      // tenta abrir o recurso diretamente; se for um arquivo .zip o navegador fará o download
-      status.textContent = 'Status: tentando abrir (se for um arquivo, o download iniciará).';
-      window.open(linkInput.value, '_blank', 'noopener');
-    });
-
-    previewBtn.addEventListener('click', () => {
-      if (previewArea.style.display === 'none') {
-        previewFrame.src = linkInput.value;
-        previewArea.style.display = 'block';
-        previewBtn.textContent = 'Fechar visualização';
-        status.textContent = 'Status: carregando visualização...';
-      } else {
-        previewFrame.src = '';
-        previewArea.style.display = 'none';
-        previewBtn.textContent = 'Visualizar em iframe';
-        status.textContent = 'Status: pronto';
-      }
-    });
-  </script>
+  <button class="btn" onclick="window.open('https://isamolinari.github.io/todos2/acesso.html','_blank')">
+    Acessar Página
+  </button>
 </body>
 </html>
