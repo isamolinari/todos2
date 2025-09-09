@@ -1,73 +1,118 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Página de Acesso — Todos os Links</title>
-  <style>
-    :root{--bg:#fff;--card:#fff;--accent:#ff4da6;--muted:#6b7280}
-    *{box-sizing:border-box}
-    body{
-      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      margin:0;min-height:100vh;background:linear-gradient(180deg,#fff 0%,#fff 50%,#fff 100%);
-      display:flex;align-items:center;justify-content:center;padding:24px;color:#111
-    }
-    .container{width:100%;max-width:820px}
-    header{display:flex;align-items:center;gap:16px;margin-bottom:20px}
-    h1{font-size:20px;margin:0}
-    p.lead{margin:6px 0 18px;color:var(--muted)}
-    .card{background:linear-gradient(180deg,#fff,#fff);border-radius:12px;padding:20px;box-shadow:0 6px 20px rgba(16,24,40,0.06);border:1px solid rgba(16,24,40,0.04)}
-    .link-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    .btn{appearance:none;border:0;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer}
-    .btn-open{background:var(--accent);color:white}
-    .btn-copy{background:#f3f4f6;color:#111}
-    .url{flex:1;padding:10px 12px;border-radius:10px;border:1px dashed #e6e6e6;background:#fafafa;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    footer{margin-top:14px;color:var(--muted);font-size:13px}
-    @media (max-width:520px){header{flex-direction:column;align-items:flex-start} .link-row{flex-direction:column;align-items:stretch}}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title> Projetos </title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #fdf2f8, #fce7f3, #fbcfe8);
+    padding: 30px;
+    color: #1f2937;
+    min-height: 100vh;
+    margin: 0;
+  }
+  h1 {
+    color: #be185d;
+    margin-bottom: 30px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    gap: 25px;
+    max-width: 1100px;
+    margin: 0 auto 40px auto;
+  }
+  .card {
+    background: linear-gradient(135deg, #ec4899, #f472b6);
+    border: none;
+    padding: 20px;
+    color: white;
+    font-size: 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
+    transition: all 0.3s ease;
+    text-align: center;
+    font-weight: 600;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .card:hover {
+    background: linear-gradient(135deg, #db2777, #ec4899);
+    box-shadow: 0 12px 25px rgba(219, 39, 119, 0.5);
+    transform: translateY(-5px) scale(1.03);
+  }
+  /* Botão Voltar ao Topo */
+  #btnTop {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    background: linear-gradient(135deg, #ec4899, #f472b6);
+    box-shadow: 0 8px 15px rgba(236, 72, 153, 0.4);
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    font-size: 26px;
+    line-height: 55px;
+    padding: 0;
+    text-align: center;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  #btnTop:hover {
+    background: linear-gradient(135deg, #be185d, #db2777);
+    box-shadow: 0 12px 20px rgba(190, 24, 93, 0.6);
+    transform: translateY(-3px);
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div>
-        <h1>Página de Acesso</h1>
-        <p class="lead">Clique no botão para abrir o link desejado ou copie o endereço.</p>
-      </div>
-    </header>
 
-    <div class="card">
-      <div class="link-row">
-        <div class="url" id="theUrl">https://isamolinari.github.io/todos2/acesso.html</div>
-        <button class="btn btn-open" id="openBtn">Abrir</button>
-        <button class="btn btn-copy" id="copyBtn">Copiar</button>
-      </div>
+<h1> Projetos </h1>
+<div class="buttons">
+  <button class="card" onclick="window.open('https://github.com/nvitoria200/python2025', '_blank')">🐍 GitHub - Python</button>
+  <button class="card" onclick="window.open('https://github.com/nvitoria200/arquivosjs2025', '_blank')">📜 GitHub - arquivos js</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/cnh-2025/index.html', '_blank')">🚗 CNH</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/valida-o-senha2025/index.html', '_blank')">🔒 Validação de Senha</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/hoje/sequencias.html', '_blank')">📊 Sequências Hoje</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/estrutura/python_html_juntos.html', '_blank')">⚡ Python e HTML Juntos</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/Gmail/index.html', '_blank')">📧 Gmail</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/testacodigo2/testarcodigo2.html', '_blank')">💻 Teste de Código 2</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/testacodigo2025/testarcodigo.html', '_blank')">💻 Teste de Código</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/testacodigo52025/testacodigo5.html', '_blank')">💻 Teste de Código 5</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/separarquivos2025/separarquivos.html', '_blank')">📂 Separar Arquivos</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/scripterro/scripterro.html', '_blank')">⚠️ Script Erro</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/mouseclick2025/mouseclick.html', '_blank')">🖱️ Mouse Click</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/index2025/index.html', '_blank')">📑 Índice</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/front32025/front3.html', '_blank')">🎨 Front 3</button>
+  <button class="card" onclick="window.open('https://github.com/nvitoria200/front22025', '_blank')">📁 GitHub - front2</button>
+  <button class="card" onclick="window.open('https://github.com/nvitoria200/front12025', '_blank')">📁 GitHub - front1</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/exemplo32025/exemplo3.html', '_blank')">🧩 Exemplo 3</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/exemplo22025/exemplo2.html', '_blank')">🧩 Exemplo 2</button>
+  <button class="card" onclick="window.open('https://github.com/nvitoria200/exemplo12025', '_blank')">📁 GitHub - exemplo1</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/despesas2025/despesas.html', '_blank')">💰 Despesas</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/calculadora22025/calculadora2.html', '_blank')">🧮 Calculadora 2</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/calculadora2025/calculadora.html', '_blank')">🧮 Calculadora</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/aula18-02-022025/aula18-02-02.html', '_blank')">📖 Aula 18-02-02</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/aula18-02-2025/aula18-02.html', '_blank')">📖 Aula 18-02</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/aula06-03-2025/aula06-03.html', '_blank')">📖 Aula 06-03</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/analisandovelocidade2025/analisandovelocidade.html', '_blank')">🚀 Analisando Velocidade</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/abracadabra2025/abracadabra.html', '_blank')">✨ Abracadabra</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/imc/imc.html', '_blank')">⚖️ IMC</button>
+  <button class="card" onclick="window.open('https://nvitoria200.github.io/jogo2025/visao.html', '_blank')">🎮 Jogo</button>
+</div>
 
-      <div style="margin-top:14px">
-        <small>Observação: se o site bloquear carregamento em iframe, a opção "Abrir" abrirá em nova aba.</small>
-      </div>
+<button id="btnTop" title="Voltar ao topo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">&#8679;</button>
 
-      <footer>
-        <div>Arquivo pronto para publicação. Salve como <code>acesso.html</code> e envie para o seu repositório GitHub (pasta raiz) ou abra localmente.</div>
-      </footer>
-    </div>
-  </div>
-
-  <script>
-    const url = document.getElementById('theUrl').textContent.trim();
-    document.getElementById('openBtn').addEventListener('click', ()=>{
-      window.open(url, '_blank', 'noopener');
-    });
-    document.getElementById('copyBtn').addEventListener('click', async ()=>{
-      try{
-        await navigator.clipboard.writeText(url);
-        const t = document.getElementById('copyBtn');
-        const old = t.textContent;
-        t.textContent = 'Copiado!';
-        setTimeout(()=> t.textContent = old, 1500);
-      }catch(e){
-        alert('Não foi possível copiar. Selecione e copie manualmente: '+url);
-      }
-    });
-  </script>
 </body>
 </html>
