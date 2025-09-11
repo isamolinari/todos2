@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jogo de Carro Halloween 3D</title>
+<style>
+body { margin:0; overflow:hidden; background:#222; font-family:Arial,sans-serif; }
+#info { position:absolute; top:10px; width:100%; text-align:center; font-size:1.5em; font-weight:bold; color:#ff7518; }
+#endGameMessage { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.8); padding:30px; border-radius:10px; text-align:center; color:white; display:none; z-index:20; }
+#restartButton, #hornButton { padding:10px 20px; font-size:1.2em; font-weight:bold; color:white; background:#ff7518; border:none; border-radius:5px; cursor:pointer; margin-top:20px; }
+#restartButton:hover, #hornButton:hover { background:#e65c00; }
+/* Botão da buzina ajustado para a direita */
+#hornButton { position:absolute; bottom:20px; right:20px; transform:none; }
+</style>
+</head>
+<body>
+<div id="info">Pontuação: <span id="score">0</span></div>
+<div id="endGameMessage">
+<h2>Fim de Jogo!</h2>
+<p>Sua pontuação: <span id="finalScore">0</span></p>
+<button id="restartButton">Reiniciar Jogo</button>
+</div>
+<button id="hornButton">🎃 Buzinar</button>
+<audio id="hornSound" src="buzina.mp3" preload="auto"></audio>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
+<script>
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x334466); // Azul mais claro
+
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight,0.1,1000);
+camera.position.set(0,15,30);
+camera.lookAt(0,0,0);
+
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// Luzes
+const ambientLight = new THREE.AmbientLight(0xff7518,0.5); // Laranja suave
+scene.add(ambientLight);
+const directionalLight = new THREE.DirectionalLight(0xffffff,0.5);
+directionalLight.position.set(10,20,10);
+scene.add(directionalLight);
+
+// Estrada
+const road = new THREE.Mesh(new THREE.PlaneGeometry(20,200), new THREE.MeshStandardMaterial({color:0x111111}));
+road.rotation.x = -Math.PI/2; road.position.z = -10;
+scene.add(road);
+
+// Linhas da estrada laranja
+const lines = [];
+for(let i=0;i<20;i++){
+    const line = new THREE.Mesh(new THREE.BoxGeometry(1,0.05,9), new THREE.MeshStandardMaterial({color:0xff7518}));
+    line.position.set(0,0.01,i*10-50);
+    scene.add(line); lines.push(line);
+}
+
+// Carro do jogador
+function createPumpkinCar(){
+    const car = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.SphereGeometry(1.5,16,16), new THREE.MeshStandardMaterial({color:0xff7518}));
+    body.scale.y=0.7; body.position.y=0.5; car.add(body);
+    const eyeGeo = new THREE.ConeGeometry(0.2,0.5,3);
+    const leftEye = new THREE.Mesh(eyeGeo,new THREE.MeshStandardMaterial({color:0x000000}));
+    leftEye.position.set(-0.5,0.8,0.8); leftEye.rotation.x=Math.PI; car.add(leftEye);
+    const rightEye = new THREE.Mesh(eyeGeo,new THREE.MeshStandardMaterial({color:0x000000}));
+    rightEye.position.set(0.5,0.8,0.8); rightEye.rotation.x=Math.PI; car.add(rightEye);
+    const mouthGeo = new THREE.ConeGeometry(0.1,0.5,3);
+    const mouth1 = new THREE.Mesh(mouthGeo,new THREE.MeshStandardMaterial({color:0x000000}));
+    mouth1.position.set(-0.5,0.3,-0.5); mouth1.rotation.x=Math.PI/2; car.add(mouth1);
+    const mouth2 = new THREE.Mesh(mouthGeo,new THREE.MeshStandardMaterial({color:0x000000}));
+    mouth2.position.set(0,0.3,-0.5); mouth2.rotation.x=Math.PI/2; car.add(mouth2);
+    const mouth3 = new THREE.Mesh(mouthGeo,new THREE.MeshStandardMaterial({color:0x000000}));
+    mouth3.position.set(0.5,0.3,-0.5); mouth3.rotation.x=Math.PI/2; car.add(mouth3);
+    return car;
+}
+
+// Carro inimigo
+function createSportCar(color){
+    const car = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.BoxGeometry(3,0.7,6), new THREE.MeshStandardMaterial({color}));
+    body.position.y=0.35; car.add(body);
+    const wheelGeo = new THREE.CylinderGeometry(0.45,0.45,0.3,16);
+    const wheelMat = new THREE.MeshStandardMaterial({color:0x111111});
+    for(let i=-1;i<=1;i+=2){
+        for(let j=-1;j<=1;j+=2){
+            const wheel = new THREE.Mesh(wheelGeo,wheelMat);
+            wheel.rotation.z=Math.PI/2;
+            wheel.position.set(i*1.2,0.2,j*2);
+            car.add(wheel);
+        }
+    }
+    return car;
+}
+
+// Vassoura como obstáculo
+function createBroom(){
+    const broom = new THREE.Group();
+    const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,2), new THREE.MeshStandardMaterial({color:0x8B4513}));
+    handle.rotation.z=Math.PI/2; handle.position.y=0.1;
+    const bristles = new THREE.Mesh(new THREE.ConeGeometry(0.3,0.5,8), new THREE.MeshStandardMaterial({color:0x222222}));
+    bristles.rotation.z=Math.PI/2; bristles.position.set(-1.1,0.1,0);
+    broom.add(handle); broom.add(bristles);
+    return broom;
+}
+
+const playerCar = createPumpkinCar(); playerCar.position.z=20; scene.add(playerCar);
+
+const enemies=[]; const laneWidth=7;
+function spawnEnemy(){
+    const enemy = createSportCar(0xff0000);
+    const lanes=[-laneWidth,0,laneWidth];
+    enemy.position.set(lanes[Math.floor(Math.random()*3)],0,-50);
+    scene.add(enemy); enemies.push(enemy);
+}
+setInterval(spawnEnemy,1500);
+
+const brooms=[]; // Lista de vassouras
+function spawnBroom(){
+    const broom = createBroom();
+    const lanes=[-laneWidth,0,laneWidth];
+    broom.position.set(lanes[Math.floor(Math.random()*3)],0,-50);
+    scene.add(broom); brooms.push(broom);
+}
+setInterval(spawnBroom,2500);
+
+// Montanhas e árvores secas
+function createMountain(color,height,posZ){
+    const geo = new THREE.ConeGeometry(10,height,8);
+    const mat = new THREE.MeshStandardMaterial({color});
+    const m = new THREE.Mesh(geo,mat); m.position.set(0,height/2-1,posZ); return m;
+}
+for(let i=-2;i<=2;i++){
+    const m = createMountain(0x442200,15+Math.random()*5,-100+i*50); m.position.x=i*30; scene.add(m);
+}
+
+function createDeadTree(){
+    const tree = new THREE.Group();
+    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.2,3), new THREE.MeshStandardMaterial({color:0x442200}));
+    trunk.position.y=1.5; tree.add(trunk);
+    const branch1 = new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,1.5), new THREE.MeshStandardMaterial({color:0x442200}));
+    branch1.position.set(0,2.5,0); branch1.rotation.z=Math.PI/4; tree.add(branch1);
+    const branch2 = branch1.clone(); branch2.position.set(0,2.5,0); branch2.rotation.z=-Math.PI/4; tree.add(branch2);
+    return tree;
+}
+const farTrees=[];
+for(let i=-5;i<=5;i++){
+    const t1=createDeadTree(); t1.position.set(-30,0,i*20-50); scene.add(t1); farTrees.push(t1);
+    const t2=createDeadTree(); t2.position.set(30,0,i*20-50); scene.add(t2); farTrees.push(t2);
+}
+
+// Controles, colisão e animação
+let keys={}; let score=0; let gameOver=false;
+window.addEventListener('keydown',e=>keys[e.key]=true);
+window.addEventListener('keyup',e=>keys[e.key]=false);
+function checkCollision(obj1,obj2){ return new THREE.Box3().setFromObject(obj1).intersectsBox(new THREE.Box3().setFromObject(obj2)); }
+
+function animate(){
+    if(gameOver) return;
+    requestAnimationFrame(animate);
+    if(keys['ArrowLeft'] && playerCar.position.x>-laneWidth) playerCar.position.x-=0.3;
+    if(keys['ArrowRight'] && playerCar.position.x<laneWidth) playerCar.position.x+=0.3;
+
+    enemies.forEach((enemy,i)=>{
+        enemy.position.z+=0.5;
+        if(enemy.position.z>30){ scene.remove(enemy); enemies.splice(i,1); score++; document.getElementById('score').textContent=score; }
+        if(checkCollision(playerCar, enemy)){ gameOver=true; document.getElementById('endGameMessage').style.display='block'; document.getElementById('finalScore').textContent=score; }
+    });
+
+    brooms.forEach((broom,i)=>{
+        broom.position.z+=0.5;
+        if(broom.position.z>30){ scene.remove(broom); brooms.splice(i,1); }
+        if(checkCollision(playerCar, broom)){ gameOver=true; document.getElementById('endGameMessage').style.display='block'; document.getElementById('finalScore').textContent=score; }
+    });
+
+    lines.forEach(line=>{ line.position.z+=0.5; if(line.position.z>50) line.position.z=-50; });
+    farTrees.forEach(tree=>{ tree.position.z+=0.2; if(tree.position.z>30) tree.position.z-=120; });
+
+    renderer.render(scene,camera);
+}
+animate();
+
+// Restart
+document.getElementById('restartButton').addEventListener('click',()=>{
+    gameOver=false; score=0; document.getElementById('score').textContent=0;
+    enemies.forEach(e=>scene.remove(e)); enemies.length=0;
+    brooms.forEach(b=>scene.remove(b)); brooms.length=0;
+    document.getElementById('endGameMessage').style.display='none';
+    animate();
+});
+
+// Buzina
+function tocarBuzina(){ const horn=document.getElementById('hornSound'); horn.currentTime=0; horn.play();}
+document.getElementById('hornButton').addEventListener('click',tocarBuzina);
+window.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='b') tocarBuzina();});
+</script>
+</body>
+</html>
